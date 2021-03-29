@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import java_ncs_exam.content.EmptyTfExeption;
 import java_ncs_exam.content.TitlePanel;
 import java_ncs_exam.dto.Title;
+import java_ncs_exam.exception.InValidationException;
 import java_ncs_exam.exception.NotSelectedException;
 import java_ncs_exam.list.TitleTablePanel;
 import java_ncs_exam.service.TitleService;
@@ -104,7 +105,7 @@ public class Management extends JFrame implements ActionListener   {
 				Title delTitle = pList.getItem();
 				service.removeTitle(delTitle);
 				pList.loadData();
-				JOptionPane.showMessageDialog(null, delTitle + "이(가)"
+				JOptionPane.showMessageDialog(null, delTitle.toString2() + "이(가)"
 						+ " 삭제되었습니다.");			
 			}
 			if(e.getActionCommand().contentEquals("수정")) {
@@ -113,7 +114,6 @@ public class Management extends JFrame implements ActionListener   {
 				pContent.setItme(updateTitle);
 				btnAdd.setText("수정");
 				preItem = pContent.getItem();
-				System.out.println(preItem);
 			}
 			}catch(IndexOutOfBoundsException | NotSelectedException e1) {
 				JOptionPane.showMessageDialog(null, "해당 직책을 선택하세요.", "선택 오류", JOptionPane.WARNING_MESSAGE);			
@@ -136,11 +136,16 @@ public class Management extends JFrame implements ActionListener   {
 			actionPerformedBtnUpdate(e);
 			}
 		}
-		}catch(NumberFormatException e1) {
+		}catch(NumberFormatException | InValidationException e1) {
 			JOptionPane.showMessageDialog(null, "공란 존재","오류", JOptionPane.ERROR_MESSAGE);
-			pContent.clearTf();
 		}catch(EmptyTfExeption e2) {
-			JOptionPane.showMessageDialog(null, "형식이 맞지 않습니다.","오류", JOptionPane.ERROR_MESSAGE);		}
+			JOptionPane.showMessageDialog(null, "형식이 맞지 않습니다.","오류", JOptionPane.ERROR_MESSAGE);		
+		}catch(Exception e3) {
+			e3.printStackTrace();
+		}finally {
+			pContent.clearTf();
+		}
+		
 	}
 	private void actionPerformedBtnUpdate(ActionEvent e) {		
 			Title updateItem = pContent.getItem();	
